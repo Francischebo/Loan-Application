@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Risk Assessment</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #0a0e27;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px;
+        }
+        .form-group {
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 200px;
+        }
+        .form-group input[type="date"] {
+            width: 220px;
+        }
+        .submit-btn {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .vv{
+            background-color: #0a0e27;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .vcontainer {
+            text-align: center;
+            max-width: 1000px;
+            margin: auto;
+        }
+        .vheader {
+            margin-bottom: 20px;
+        }
+        canvas {
+            background-color: white;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        #imageContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+        .vchart-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+    </style>
+</head>
+<body>
+    <header class="nav-bar">
+        <h1>Credit Risk Assessment and Loan Approval System</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#apply">Apply</a></li>
+                <li><a href="#visual">Visualize</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main id="home" >
+        <section class="hero">
+            <h2>Loan Data Analysis, Prediction, Visualization</h2>
+            <p>Predict Approval. Visualize Data.</p>
+        </section>
+        <section class="data-overview">
+            <div class="box">Data Analysis: Size 1.24GB</div>
+            <div class="box">Data Visualization: Used Tableau</div>
+            <div class="box">Default Prediction: Your loan approval chances.</div>
+        </section>
+    </main>
+    <div id="apply">
+        <h2>General Loan Application</h2>
+        <form class="container" action="{{ url_for('gen_application')}}"method="Post">
+            <div class="form-group">
+                <label for="loan_amnt">Loan Amount</label>
+                <input type="text" id="loan_amnt" name="loan_amnt">
+            </div>
+            <div class="form-group">
+                <label for="int_rate">Interest Rate</label>
+                <input type="number" id="int_rate" name="int_rate">
+            </div>
+            <div class="form-group">
+                <label for="installment">Installment</label>
+                <input type="number" id="installment" name="installment">
+            </div>
+            <div class="form-group">
+                <label for="emp_title">Employment Title</label>
+                <input type="text" id="emp_title" name="emp_title">
+            </div>
+            <div class="form-group">
+                <label for="annual_inc">Annual Income</label>
+                <input type="number" id="annual_inc" name="annual_inc">
+            </div>
+            <div class="form-group">
+                <label for="dti">Debt-to-Income</label>
+                <input type="number" id="dti" name="dti">
+            </div>
+            <div class="form-group">
+                <label for="earliest_cr_line">Earliest Credit Line</label>
+                <input type="date" id="earliest_cr_line" name="earliest_cr_line">
+            </div>
+            <div class="form-group">
+                <label for="revol_bal">Total Credit Revolving Balance</label>
+                <input type="text" id="revol_bal" name="revol_bal">
+            </div>
+            <div class="form-group">
+                <label for="revol_util">Revolving Utilization Rate</label>
+                <input type="text" id="revol_util" name="revol_util">
+            </div>
+            <div class="form-group">
+                <label for="total_acc">Total Credit Currently in the Borrower Credit File</label>
+                <input type="number" id="total_acc" name="total_acc">
+            </div>
+            <div class="form-group">
+                <label for="address_encoded">Address Encoded</label>
+                <input type="double" id="address_encoded" name="address_encoded">
+            </div>
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+        <h4 style="color:yellow;">{{prediction}}</h4>
+    </div>
+    <div id="visual">
+        <div class="vheader">
+            <div class="vcontainer">
+                <header class="vheader">
+                    <h1>Visualization</h1><br>
+                    <h3>Get state-wise lending information</h3><br>
+                    <p>The histograms below depict loan status distributions for different variables.</p>
+                </header>
+                <main>
+                    <div class="vchart-container" style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                        <canvas id="dtiChart"></canvas>
+                        <canvas id="openCreditLinesChart"></canvas>
+                        <canvas id="totalCreditLinesChart"></canvas>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Credit Risk System</p>
+    </footer>
+</body>
+</html>
